@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FooDesk.API</name>
+    </assembly>
+    <members>
+        <member name="M:FooDesk.API.Controllers.CustomersController.GetCustomers">
+            <summary>
+            Get all customers.
+            </summary>
+            <returns>Customer</returns>
+        </member>
+        <member name="M:FooDesk.API.Controllers.CustomersController.GetCustomer(System.Int32)">
+            <summary>
+            Get a customer.
+            </summary>
+            <param name="id">The customer id to retrieve.</param>
+            <returns>Customer</returns>
+        </member>
+        <member name="M:FooDesk.API.Controllers.CustomersController.PatchCustomer(System.Int32,Microsoft.AspNet.OData.Delta{FooDesk.Core.Dto.CustomerDto})">
+            <summary>
+            Partially update a customer.
+            </summary>
+            <param name="id">The customer id to update.</param>
+            <param name="customer">The customer object.</param>
+            <returns>Customer</returns>
+        </member>
+        <member name="M:FooDesk.API.Controllers.CustomersController.PutCustomer(System.Int32,FooDesk.Core.Dto.CustomerDto)">
+            <summary>
+            Update a customer.
+            </summary>
+            <param name="id">The customer id to update.</param>
+            <param name="customer">The customer object.</param>
+            <returns>Customer</returns>
+        </member>
+        <member name="M:FooDesk.API.Controllers.CustomersController.PostCustomer(FooDesk.Core.Dto.CustomerDto)">
+            <summary>
+            Create a customer.
+            </summary>
+            <returns>Customer</returns>
+        </member>
+        <member name="M:FooDesk.API.Controllers.CustomersController.DeleteCustomer(System.Int32)">
+            <summary>
+            Delete a customer.
+            </summary>
+            <param name="id">The customer id to delete.</param>
+            <returns>None</returns>
+        </member>
+    </members>
+</doc>
