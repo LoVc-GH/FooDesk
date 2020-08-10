@@ -18,7 +18,7 @@ namespace FooDesk.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize]//(Roles = "Admin")]
     public class CustomersController : Controller
     {
         private readonly FooDeskContext _context;        

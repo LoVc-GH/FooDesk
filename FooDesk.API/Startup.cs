@@ -15,6 +15,9 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.OData.Edm;
 using FooDesk.Core.Dto;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FooDesk.API
 {
@@ -53,13 +56,47 @@ namespace FooDesk.API
                 options.EnableEndpointRouting = false;
             });
 
-            services.AddAuthentication("Bearer").AddJwtBearer("Bearer", config =>
+            var tokenValidationParameters = new TokenValidationParameters
             {
-                config.Authority = "http://localhost:5000/";
-                config.RequireHttpsMetadata = false;
+                ValidateIssuerSigningKey = false,
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+                RoleClaimType = "role",
+            };
 
-                config.Audience = "FooDesk";
-            });
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
+
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority  = "http://localhost:5000/";
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = tokenValidationParameters;
+                });
+            
+            //services.AddAuthentication("Bearer")
+            ////   .AddJwtBearer("Bearer", config =>
+            ////{
+            ////    config.Authority = "http://localhost:5000/";
+            ////    config.RequireHttpsMetadata = false;
+
+            ////    config.Audience = "FooDesk";
+            ////    config.TokenValidationParameters = new TokenValidationParameters
+            ////    {
+            ////        RoleClaimType = "role"
+            ////    };
+            ////})
+            //.AddIdentityServerAuthentication(configureOptions =>
+            //{
+            //    configureOptions.RoleClaimType = "role";
+            //    configureOptions.Authority = "http://localhost:5000";
+            //    configureOptions.RequireHttpsMetadata = false;
+            //    //configureOptions.ApiName = "FooDesk";
+            //    configureOptions.SupportedTokens = IdentityServer4.AccessTokenValidation.SupportedTokens.Jwt;
+            //});
 
             // Register the Swagger services
             services.AddSwaggerDocument(settings =>
@@ -72,7 +109,7 @@ namespace FooDesk.API
         }
 
             // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-            public void Configure(IApplicationBuilder app, IWebHostEnvironment env)       
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)       
         {
             if (env.IsDevelopment())
             {

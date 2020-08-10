@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Text;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,15 +18,27 @@ namespace FooDesk.WASM
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
 
-            builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddHttpClient("FooDesk", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+                .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
+            // Supply HttpClient instances that include access tokens when making requests to the server project
+            builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("FooDesk"));
+
+            builder.Services.AddAuthorizationCore(config =>
+            {
+                config.AddPolicy("Admin", policy =>
+                {
+                    policy.RequireRole("Admin");
+                });
+                config.AddPolicy("User", policy =>
+                {
+                    policy.RequireRole("User");
+                });
+            });
             builder.Services.AddOidcAuthentication(options =>
             {
-
-                // Configure your authentication provider options here.
-                // For more information, see https://aka.ms/blazor-standalone-auth
-                builder.Configuration.Bind("oidc", options.ProviderOptions);
-
+                options.UserOptions.RoleClaim = "role";
+                builder.Configuration.Bind("identityserver", options.ProviderOptions);
             });
 
             await builder.Build().RunAsync();

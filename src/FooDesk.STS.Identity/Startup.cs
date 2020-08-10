@@ -84,7 +84,8 @@ namespace FooDesk.STS.Identity
         public virtual void RegisterAuthentication(IServiceCollection services)
         {
             services.AddAuthenticationServices<AdminIdentityDbContext, UserIdentity, UserIdentityRole>(Configuration);
-            services.AddIdentityServer<IdentityServerConfigurationDbContext, IdentityServerPersistedGrantDbContext, UserIdentity>(Configuration);
+            var builder = services.AddIdentityServer<IdentityServerConfigurationDbContext, IdentityServerPersistedGrantDbContext, UserIdentity>(Configuration);
+            //builder.AddProfileService<ProfileService>();
         }
 
         public virtual void RegisterAuthorization(IServiceCollection services)
